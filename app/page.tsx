@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <>
-      <main>
+      <main className="max-w-3xl mx-auto">
         <form
           onSubmit={handleSubmit((data) => {
             setSearch(data.search);
@@ -107,7 +107,7 @@ export default function Home() {
             ))}
           </div>
         ) : !loading ? (
-          <div className="m-8 flex items-center">
+          <div className="m-8 flex items-center max-w-lg mx-auto">
             <div className="hero bg-secondary text-secondary-content p-4 rounded-xl">
               <div className="hero-content text-center">
                 <div className="max-w-md">
@@ -141,7 +141,7 @@ export default function Home() {
           </button>
 
           {currentTrack && (
-            <div className="mt-4 flex flex-col justify-center items-center gap-8">
+            <div className="mt-4 flex flex-col justify-center items-center gap-8 max-w-3xl mx-auto">
               <Image
                 src={currentTrack.album.image.large}
                 alt={currentTrack.album.title}
