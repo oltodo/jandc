@@ -113,9 +113,9 @@ export default function Home() {
                 <div className="max-w-md">
                   <h1 className="text-4xl font-bold">Hey!</h1>
                   <p className="mt-6">
-                    Pour faire une suggestion c'est simple : fais une recherche
-                    dans la barre en haut et choisis sur un des morceaux
-                    proposés.
+                    Pour faire une suggestion c&apos;est simple : fais une
+                    recherche dans la barre en haut et choisis sur un des
+                    morceaux proposés.
                   </p>
                 </div>
               </div>
