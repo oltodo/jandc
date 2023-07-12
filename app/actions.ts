@@ -27,7 +27,7 @@ export async function sendSuggestion({
     },
     body: JSON.stringify({
       username: "Track Request",
-      avatar_url: "https://i.imgur.com/4M34hi2.png",
+      avatar_url: "https://jandc.vercel.app/heart.png",
       content: `Nouvelle suggestion: **${track.title}** de **${authorName}**`,
 
       embeds: [
