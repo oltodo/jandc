@@ -28,7 +28,7 @@ export async function sendSuggestion({
     body: JSON.stringify({
       username: "Track Request",
       avatar_url: "https://i.imgur.com/4M34hi2.png",
-      content: `Nouvelle suggestion: **${track.title} de ${authorName}**`,
+      content: `Nouvelle suggestion: **${track.title}** de **${authorName}**`,
 
       embeds: [
         {
@@ -36,6 +36,9 @@ export async function sendSuggestion({
           url: `https://open.qobuz.com/track/${track.id}`,
           author: {
             name: authorName,
+          },
+          thumbnail: {
+            url: album.image.large,
           },
           fields: [
             {
