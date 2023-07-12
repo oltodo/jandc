@@ -6,22 +6,9 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
-
-type Track = {
-  id: number;
-  title: string;
-  album: {
-    title: string;
-    artist: {
-      name: string;
-    };
-    image: {
-      small: string;
-      thumbnail: string;
-      large: string;
-    };
-  };
-};
+import { sendSuggestion } from "./actions";
+import { Track } from "@/src/types";
+import { ToastContainer, toast } from "react-toastify";
 
 type Response = {
   tracks: {
@@ -32,6 +19,7 @@ type Response = {
 export default function Home() {
   const [search, setSearch] = useState("");
   const [currentTrack, setCurrentTrack] = useState<Track>();
+  const [sending, setSending] = useState(false);
 
   const {
     register,
@@ -43,7 +31,7 @@ export default function Home() {
     search ? search : null,
     (search) =>
       fetch(
-        `https://www.qobuz.com/api.json/0.2/catalog/search?app_id=764492234&query=${search}&type=tracks&limit=200`
+        `https://www.qobuz.com/api.json/0.2/catalog/search?app_id=${process.env.QUOBUZ_APP_ID}&query=${search}&type=tracks&limit=200`
       ).then((r) => r.json()),
     {
       revalidateIfStale: false,
@@ -85,7 +73,10 @@ export default function Home() {
               <button
                 className="bg-base-200/30 rounded-md p-3 flex gap-4 text-left"
                 key={track.id}
-                onClick={() => setCurrentTrack(track)}
+                onClick={() => {
+                  setCurrentTrack(track);
+                  toast.dismiss();
+                }}
               >
                 <div className="avatar">
                   <div className="relative h-12 rounded">
@@ -131,15 +122,18 @@ export default function Home() {
           currentTrack && "modal-open"
         )}
       >
-        <form
-          method="dialog"
-          className="modal-box bg-secondary text-secondary-content"
-          onSubmit={() => setCurrentTrack(undefined)}
-        >
-          <button className="btn btn-circle btn-ghost absolute right-2 top-2">
-            <XMarkIcon className="w-8 h-8" />
-          </button>
-
+        <div className="modal-box bg-secondary text-secondary-content">
+          <form
+            method="dialog"
+            onSubmit={() => {
+              setCurrentTrack(undefined);
+              setSending(false);
+            }}
+          >
+            <button className="btn btn-circle btn-ghost absolute right-2 top-2">
+              <XMarkIcon className="w-8 h-8" />
+            </button>
+          </form>
           {currentTrack && (
             <div className="mt-4 flex flex-col justify-center items-center gap-8 max-w-3xl mx-auto">
               <Image
@@ -158,25 +152,53 @@ export default function Home() {
                 </div>
               </div>
 
+              <input
+                type="hidden"
+                name="track"
+                value={JSON.stringify(currentTrack)}
+              />
               <button
                 className="btn btn-lg"
-                onClick={(event) => {
-                  event.preventDefault();
+                disabled={sending}
+                onClick={async () => {
+                  setSending(true);
+                  await sendSuggestion(currentTrack);
+                  setSending(false);
+                  setCurrentTrack(undefined);
+
+                  toast("C'est fait, merci !", {
+                    type: "success",
+                    position: toast.POSITION.BOTTOM_CENTER,
+                  });
                 }}
               >
-                Suggérer ce morceau
+                {sending ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Suggérer ce morceau"
+                )}
               </button>
             </div>
           )}
-        </form>
+        </div>
         <form
           method="dialog"
           className="modal-backdrop"
-          onSubmit={() => setCurrentTrack(undefined)}
+          onSubmit={() => {
+            setCurrentTrack(undefined);
+            setSending(false);
+          }}
         >
           <button>close</button>
         </form>
       </dialog>
+      <ToastContainer
+        closeButton={
+          <button className="btn btn-circle btn-ghost self-center">
+            <XMarkIcon className="w-6 h-6" />
+          </button>
+        }
+      />
     </>
   );
 }

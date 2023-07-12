@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  --toastify-toast-width: 100%;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -11,4 +12,46 @@
 }
 
 body {
+  @apply text-secondary-content;
+}
+
+.Toastify__toast-container {
+  @apply p-4;
+}
+.Toastify__toast {
+  @apply alert justify-normal max-w-lg mx-auto mt-4;
+  grid-template-columns: 1fr auto;
+}
+.Toastify__toast-body {
+  @apply text-left text-lg w-full;
+}
+
+.Toastify__toast--success {
+  @apply alert-success;
+}
+.Toastify__toast--success svg {
+  @apply fill-success-content;
+}
+.Toastify__toast--success .Toastify__progress-bar {
+  @apply bg-success-content;
+}
+
+.Toastify__toast--error {
+  @apply alert-error;
+}
+.Toastify__toast--error svg {
+  @apply fill-error-content;
+}
+.Toastify__toast--error .Toastify__progress-bar {
+  @apply bg-error-content;
+}
+
+.Toastify__toast--info {
+  @apply alert-info;
+}
+.Toastify__toast--info svg {
+  @apply fill-info-content;
+}
+.Toastify__toast--info .Toastify__progress-bar {
+  @apply bg-info-content;
 }
