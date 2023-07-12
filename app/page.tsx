@@ -98,7 +98,7 @@ export default function Home() {
             ))}
           </div>
         ) : !loading ? (
-          <div className="m-8 flex items-center max-w-lg mx-auto">
+          <div className="p-4 flex items-center max-w-lg mx-auto">
             <div className="hero bg-secondary text-secondary-content p-4 rounded-xl">
               <div className="hero-content text-center">
                 <div className="max-w-md">
