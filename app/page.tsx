@@ -168,7 +168,7 @@ export default function Home() {
                     setSending(false);
                     setCurrentTrack(undefined);
 
-                    toast("C'est fait, merci !", {
+                    toast("Merci, c'est envoyé !", {
                       type: "success",
                       position: toast.POSITION.BOTTOM_CENTER,
                     });
