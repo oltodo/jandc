@@ -31,7 +31,7 @@ export default function Home() {
     search ? search : null,
     (search) =>
       fetch(
-        `https://www.qobuz.com/api.json/0.2/catalog/search?app_id=${process.env.QUOBUZ_APP_ID}&query=${search}&type=tracks&limit=200`
+        `https://www.qobuz.com/api.json/0.2/catalog/search?app_id=${process.env.NEXT_PUBLIC_QUOBUZ_APP_ID}&query=${search}&type=tracks&limit=200`
       ).then((r) => r.json()),
     {
       revalidateIfStale: false,
