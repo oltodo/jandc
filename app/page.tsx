@@ -162,14 +162,24 @@ export default function Home() {
                 disabled={sending}
                 onClick={async () => {
                   setSending(true);
-                  await sendSuggestion(currentTrack);
-                  setSending(false);
-                  setCurrentTrack(undefined);
 
-                  toast("C'est fait, merci !", {
-                    type: "success",
-                    position: toast.POSITION.BOTTOM_CENTER,
-                  });
+                  try {
+                    await sendSuggestion(currentTrack);
+                    setSending(false);
+                    setCurrentTrack(undefined);
+
+                    toast("C'est fait, merci !", {
+                      type: "success",
+                      position: toast.POSITION.BOTTOM_CENTER,
+                    });
+                  } catch (error) {
+                    setSending(false);
+
+                    toast("Oups, ça n'a pas marché", {
+                      type: "error",
+                      position: toast.POSITION.BOTTOM_CENTER,
+                    });
+                  }
                 }}
               >
                 {sending ? (
