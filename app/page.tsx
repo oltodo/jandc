@@ -7,27 +7,22 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import { sendSuggestion } from "./actions";
-import { Track } from "@/src/types";
+import { Qobuz } from "@/src/types";
 import { ToastContainer, toast } from "react-toastify";
-
-type Response = {
-  tracks: {
-    items: Track[];
-  };
-};
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [currentTrack, setCurrentTrack] = useState<Track>();
+  const [currentTrack, setCurrentTrack] = useState<Qobuz.Track>();
   const [sending, setSending] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    resetField,
+    formState: { isSubmitting, isValid, isDirty },
   } = useForm<{ search: string }>();
 
-  const { data, isValidating } = useSWR<Response>(
+  const { data, isValidating } = useSWR<Qobuz.SearchResponse>(
     search ? search : null,
     (search) =>
       fetch(
@@ -46,19 +41,38 @@ export default function Home() {
     <>
       <main className="max-w-3xl mx-auto">
         <form
-          onSubmit={handleSubmit((data) => {
+          onSubmit={handleSubmit((data, event) => {
             setSearch(data.search);
+            event?.target?.search?.blur();
           })}
           className="p-4 flex gap-4 border-b-neutral border-b bg-base-100 sticky top-0 z-50"
         >
-          <input
-            type="text"
-            placeholder="Titre, artiste, album, ..."
-            className="input input-bordered input-primary w-full"
-            disabled={loading}
-            {...register("search", { required: true })}
-          />
-          <button className="btn btn-primary btn-circle" disabled={loading}>
+          <label className="w-full relative">
+            <input
+              type="text"
+              placeholder="Titre, artiste, album, ..."
+              className="input input-bordered input-primary w-full pr-12"
+              disabled={loading}
+              {...register("search", { required: true, minLength: 3 })}
+            />
+            <button
+              type="button"
+              className="btn btn-circle btn-ghost btn-xs absolute right-4 translate-y-1/2"
+              disabled={!isDirty}
+              onClick={(event) => {
+                event.preventDefault();
+                event.currentTarget.form?.search?.focus();
+                resetField("search");
+              }}
+            >
+              <XMarkIcon />
+            </button>
+          </label>
+          <button
+            type="submit"
+            className="btn btn-primary btn-circle"
+            disabled={!isValid || loading}
+          >
             {loading ? (
               <span className="loading loading-spinner"></span>
             ) : (
@@ -104,9 +118,9 @@ export default function Home() {
                 <div className="max-w-md">
                   <h1 className="text-4xl font-bold">Hey!</h1>
                   <p className="mt-6">
-                    Pour faire une suggestion c&apos;est simple : fais une
-                    recherche dans la barre en haut et choisis sur un des
-                    morceaux proposés.
+                    Pour suggérer un morçeau c&apos;est simple : fais une
+                    recherche dans la barre en haut et choisis un des morceaux
+                    proposés.
                   </p>
                 </div>
               </div>

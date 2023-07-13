@@ -1,12 +1,12 @@
 "use server";
 
-import { Track } from "@/src/types";
+import { Qobuz } from "@/src/types";
 
 export async function sendSuggestion({
   performer,
   album: { artist, ...album },
   ...track
-}: Track) {
+}: Qobuz.Track) {
   if (!process.env.DISCORD_WEBHOOK) {
     return;
   }
